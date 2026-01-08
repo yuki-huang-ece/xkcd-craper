@@ -1,0 +1,32 @@
+name: Daily XKCD Scraper
+
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    - cron: '0 1 * * *' # 每天 UTC 1 點 (台灣 9 點)
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Run XKCD scraper
+        run: |
+          python main.py
+
+      - name: Run tests
+        run: |
+          python -m pytest
